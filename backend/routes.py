@@ -7,6 +7,7 @@ def init_routes(app):
     @app.route('/')
     def index():
         expenses = Expense.query.order_by(Expense.date.desc()).all()
+        
         # Monthly summary
         summary = {}
         categories = {}
@@ -14,6 +15,7 @@ def init_routes(app):
             month = exp.date.strftime("%Y-%m")
             summary[month] = summary.get(month, 0) + exp.amount
             categories[exp.category] = categories.get(exp.category, 0) + exp.amount
+
         return render_template('index.html', expenses=expenses, summary=summary, categories=categories)
 
     @app.route('/add', methods=['GET', 'POST'])
@@ -35,4 +37,3 @@ def init_routes(app):
         db.session.delete(exp)
         db.session.commit()
         return redirect(url_for('index'))
-
